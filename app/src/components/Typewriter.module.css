@@ -1,0 +1,176 @@
+.tw3d {
+  position: relative;
+  z-index: 2;
+  width: 70em;
+  font-size: clamp(4px, 1.4vw, 10px);
+  margin: 0 auto;
+}
+
+.roller {
+  position: relative;
+  width: 62em;
+  height: 4.6em;
+  margin: 0 auto -1.4em;
+  z-index: 3;
+}
+
+.cyl {
+  position: absolute;
+  inset: 0;
+  border-radius: 2.3em;
+  background: linear-gradient(#e4dcc8, #a39b86 35%, #3f3a2e 72%, #8d8571);
+  box-shadow: 0 0.5em 0.8em rgba(0, 0, 0, 0.4);
+}
+
+.knob {
+  position: absolute;
+  top: -0.6em;
+  width: 5.8em;
+  height: 5.8em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #6a665a, #26231c 70%);
+  box-shadow:
+    0 0.5em 0.7em rgba(0, 0, 0, 0.45),
+    inset 0 0 0 0.35em #15130f;
+}
+
+.knob::after {
+  content: "";
+  position: absolute;
+  inset: 1.1em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d8cfb6, #7d745e);
+}
+
+.knobL {
+  left: -3.6em;
+}
+
+.knobR {
+  right: -3.6em;
+}
+
+.body {
+  position: relative;
+  padding: 3em 0 3.4em;
+  clip-path: polygon(4% 0, 96% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, #78a39b 0, #55827a 30%, #3f6862 100%);
+}
+
+.body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.28), transparent 7%, transparent 93%, rgba(0, 0, 0, 0.28)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 3em);
+}
+
+.grille {
+  height: 2.6em;
+  width: 76%;
+  margin: 0 auto 0.9em;
+  border-radius: 0.5em;
+  background: repeating-linear-gradient(90deg, #17211f 0 0.35em, #2f4743 0.35em 0.95em);
+  box-shadow:
+    inset 0 0.4em 0.6em rgba(0, 0, 0, 0.6),
+    0 0.15em 0 rgba(255, 255, 255, 0.3);
+}
+
+.plate {
+  width: 20em;
+  margin: 0 auto 1.2em;
+  text-align: center;
+  padding: 0.5em 0;
+  border-radius: 0.4em;
+  background: linear-gradient(#efe5cc, #c4b692);
+  box-shadow: 0 0.2em 0.4em rgba(0, 0, 0, 0.4);
+  color: #3a2e22;
+}
+
+.plate span {
+  font: 700 1.3em "Courier Prime", "Courier New", monospace;
+}
+
+.krow {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1em;
+  position: relative;
+}
+
+.key {
+  width: 3.6em;
+  height: 3.6em;
+  margin: 0 0.4em;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 35% 30%, #fffaf0, #efe6d0 55%, #cfc3a6);
+  border: 0.28em solid #26241f;
+  color: #26241f;
+  box-shadow:
+    0 0.55em 0 #14130f,
+    0 1em 0.7em rgba(0, 0, 0, 0.45),
+    inset 0 0.15em 0.2em rgba(255, 255, 255, 0.85);
+}
+
+.key span {
+  font: 700 1.5em/1 "Courier Prime", "Courier New", monospace;
+}
+
+.wide {
+  width: 7.4em;
+  border-radius: 1.8em;
+}
+
+.wide span {
+  font-size: 1em;
+  letter-spacing: 0.05em;
+}
+
+.space {
+  width: 34em;
+  height: 3em;
+  border-radius: 1.5em;
+}
+
+.down {
+  transform: translateY(0.5em);
+  box-shadow:
+    0 0.05em 0 #14130f,
+    0 0.3em 0.4em rgba(0, 0, 0, 0.4),
+    inset 0 0.15em 0.3em rgba(0, 0, 0, 0.25);
+  background: radial-gradient(circle at 35% 30%, #efe6d0, #cfc3a6);
+}
+
+.base {
+  position: relative;
+  width: 66em;
+  height: 1.6em;
+  margin: -0.2em auto 0;
+  border-radius: 0 0 1em 1em;
+  background: linear-gradient(#2a2822, #0f0e0b);
+  box-shadow: 0 0.8em 1em rgba(0, 0, 0, 0.35);
+}
+
+.base::before,
+.base::after {
+  content: "";
+  position: absolute;
+  bottom: -0.7em;
+  width: 6em;
+  height: 0.9em;
+  border-radius: 0 0 0.6em 0.6em;
+  background: #0b0a08;
+}
+
+.base::before {
+  left: 4em;
+}
+
+.base::after {
+  right: 4em;
+}
