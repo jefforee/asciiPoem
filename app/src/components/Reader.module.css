@@ -1,0 +1,88 @@
+.reader {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0 2.5rem;
+}
+
+.bigshadow {
+  filter: drop-shadow(0 0.6rem 0.9rem rgba(60, 40, 20, 0.4));
+  animation: land 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  height: fit-content;
+}
+
+@keyframes land {
+  from {
+    transform: translateY(55vh) rotate(10deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.bigsheet {
+  width: min(36rem, 92vw);
+  box-sizing: border-box;
+  padding: 2.4rem 2rem 3.6rem;
+  color: var(--paperink);
+  font-family: "Special Elite", "Courier New", monospace;
+  background:
+    var(--grain),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.06), transparent 6%, transparent 94%, rgba(0, 0, 0, 0.06)),
+    #faf4e4;
+  transform: rotate(-0.6deg);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 99%,
+    97% 99.6%,
+    93% 98.4%,
+    88% 99.7%,
+    83% 98.6%,
+    78% 99.5%,
+    72% 98.3%,
+    66% 99.6%,
+    60% 98.5%,
+    54% 99.7%,
+    48% 98.4%,
+    42% 99.5%,
+    36% 98.5%,
+    30% 99.7%,
+    24% 98.4%,
+    18% 99.6%,
+    12% 98.5%,
+    6% 99.5%,
+    0 98.8%
+  );
+}
+
+.bigsheet h2 {
+  margin: 0 0 1rem;
+  text-align: center;
+  font-weight: 400;
+  font-size: 1.7rem;
+  letter-spacing: 0.08em;
+}
+
+.rart {
+  margin: 1.4rem auto 0.6rem;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+  line-height: 1.15;
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: clamp(0.7rem, 2.8vw, 1rem);
+}
+
+.rlines {
+  margin: 0 auto 1rem;
+  width: fit-content;
+  white-space: pre;
+  font: 1.15rem/1.7 "Special Elite", "Courier New", monospace;
+}
+
+.rfoot {
+  text-align: center;
+  margin-top: 1.6rem;
+  opacity: 0.6;
+}
