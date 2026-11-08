@@ -35,6 +35,16 @@ export const PAPER = {
 // so that the paper's canvas col-0 lands on the world-fixed strike point.
 export const PAPER_LOCAL_X = 0;
 
+// Paper's resting Y inside the carriage, chosen so row 0 (near the top
+// of the canvas) sits AT the strike line when paperY = 0. That means at
+// start, the sheet is mostly tucked inside the body and only the top
+// margin pokes above the platen — paper then emerges from the machine
+// as line-feeds raise it.
+//   row0 plane-local y = PAPER.height/2 - PAPER.topMargin
+//   want: PAPER_REST_Y + row0_local + PLATEN.y = STRIKE.y
+export const PAPER_REST_Y_LOCAL =
+  PLATEN.radius + PAPER.topMargin + 0.05 - PAPER.height / 2;
+
 export const CARRIAGE = {
   // homeX puts canvas col-0 under the strike at world x = 0:
   //   col-0 world = homeX + PAPER_LOCAL_X + (-width/2 + leftMargin)

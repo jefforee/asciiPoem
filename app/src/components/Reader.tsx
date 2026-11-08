@@ -16,7 +16,6 @@ export default function Reader({ poem }: Props) {
               {s.lines.join("\n")}
             </pre>
           ))}
-          <div className={styles.rfoot}>~ fin ~</div>
         </div>
       </div>
     </div>

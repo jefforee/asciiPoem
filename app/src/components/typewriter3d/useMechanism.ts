@@ -1,7 +1,13 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import type { Group } from "three";
-import { CARRIAGE, PAPER, PAPER_LOCAL_X, PLATEN } from "./constants";
+import {
+  CARRIAGE,
+  PAPER,
+  PAPER_LOCAL_X,
+  PAPER_REST_Y_LOCAL,
+  PLATEN,
+} from "./constants";
 import { charToBarIndex } from "./charToBar";
 import { charToKey } from "./charToKey";
 import type { CRLeverHandle } from "./parts/CRLever";
@@ -19,10 +25,14 @@ type Refs = {
 };
 
 const PAPER_REST_X = PAPER_LOCAL_X;
-const PAPER_REST_Y = PLATEN.radius + PAPER.height / 2;
+const PAPER_REST_Y = PAPER_REST_Y_LOCAL;
 const PAPER_REST_Z = PLATEN.radius + 0.08;
 const PAPER_REST_PITCH = -0.14;
 const RIP_MS = 1200;
+
+// Each line feed advances the paper by one full line-height so a newly
+// typed row visually lands at the strike line each time.
+const PAPER_FEED_PER_LINE = PAPER.lineHeight;
 
 type Mode = "shift" | "return";
 
@@ -38,10 +48,6 @@ type State = {
   ripActive: boolean;
   ripStartedAt: number;
 };
-
-// How far the paper rises per line feed. Half of a full line-height so the
-// motion reads as a subtle "feed" nudge rather than a full page scroll.
-const PAPER_RISE_PER_LINE = PAPER.lineHeight * 0.5;
 
 function makeState(): State {
   return {
@@ -73,7 +79,7 @@ function processChar(
 
   if (ch === "\n") {
     s.targetCarriageX = CARRIAGE.homeX;
-    s.targetPaperY += PAPER_RISE_PER_LINE;
+    s.targetPaperY += PAPER_FEED_PER_LINE;
     s.col = 0;
     s.row += 1;
     s.mode = "return";

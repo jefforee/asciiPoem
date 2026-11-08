@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useMemo, useRef } from "react";
 import { CanvasTexture, DoubleSide, type Mesh } from "three";
-import { PAPER, PAPER_LOCAL_X, PLATEN } from "../constants";
+import { PAPER, PAPER_LOCAL_X, PAPER_REST_Y_LOCAL, PLATEN } from "../constants";
 import { PALETTE } from "../palette";
 
 export type PaperHandle = {
@@ -137,11 +137,7 @@ const Paper = forwardRef<PaperHandle>(function Paper(_props, ref) {
   return (
     <mesh
       ref={meshRef}
-      position={[
-        PAPER_LOCAL_X,
-        PLATEN.radius + PAPER.height / 2,
-        PLATEN.radius + 0.08,
-      ]}
+      position={[PAPER_LOCAL_X, PAPER_REST_Y_LOCAL, PLATEN.radius + 0.08]}
       rotation={[-0.14, 0, 0]}
       castShadow
     >

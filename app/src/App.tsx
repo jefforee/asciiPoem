@@ -16,10 +16,13 @@ export default function App() {
   const poem = poems[p];
   const base = Math.round(300 / speed);
 
-  // The full poem types on one sheet. Stanzas are separated by a blank
-  // line ("\n\n") so the paper takes two extra line-feeds between them.
+  // The whole poem types on one sheet: title first, then a blank line,
+  // then stanzas joined with their own blank-line separators.
   const poemText = useMemo(
-    () => poem.stanzas.map((s) => s.lines.join("\n")).join("\n\n"),
+    () =>
+      poem.title +
+      "\n\n" +
+      poem.stanzas.map((s) => s.lines.join("\n")).join("\n\n"),
     [poem],
   );
 
