@@ -1,5 +1,5 @@
-import { forwardRef } from "react";
-import type { Group } from "three";
+import Base from "./parts/Base";
+import Carriage from "./parts/Carriage";
 
 type Props = {
   index: number;
@@ -7,12 +7,12 @@ type Props = {
   ripping: boolean;
 };
 
-const Typewriter = forwardRef<Group, Props>(function Typewriter(_props, ref) {
+export default function Typewriter(_props: Props) {
   return (
-    <group ref={ref} position={[0, 0, 0]}>
-      {/* chassis, carriage, paper, ribbon, typebars, keys land here in later commits */}
+    <group position={[0, 0, 0]}>
+      <Base />
+      <Carriage />
+      {/* paper, ribbon, bail, typebars, keys land in following commits */}
     </group>
   );
-});
-
-export default Typewriter;
+}
