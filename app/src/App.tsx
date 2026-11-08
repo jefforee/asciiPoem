@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import Reader from "./components/Reader";
 import Stage from "./components/Stage";
 import { poems } from "./data/poems";
@@ -7,7 +7,6 @@ type Phase = "typing" | "ripping" | "reading";
 
 export default function App() {
   const [p, setP] = useState(0);
-  const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
   const [run, setRun] = useState(0);
   const [speed, setSpeed] = useState(5);
@@ -17,19 +16,21 @@ export default function App() {
   const poem = poems[p];
   const base = Math.round(300 / speed);
 
-  const next = useCallback(() => {
-    if (i < poem.stanzas.length - 1) {
-      setI((n) => n + 1);
-    } else {
-      setPhase("ripping");
-      timer.current = window.setTimeout(() => setPhase("reading"), 1300);
-    }
-  }, [poem, i]);
+  // The full poem types on one sheet. Stanzas are separated by a blank
+  // line ("\n\n") so the paper takes two extra line-feeds between them.
+  const poemText = useMemo(
+    () => poem.stanzas.map((s) => s.lines.join("\n")).join("\n\n"),
+    [poem],
+  );
+
+  const onDone = useCallback(() => {
+    setPhase("ripping");
+    timer.current = window.setTimeout(() => setPhase("reading"), 1300);
+  }, []);
 
   const restart = (n?: number) => {
     if (timer.current !== null) window.clearTimeout(timer.current);
     if (n !== undefined) setP(n);
-    setI(0);
     setPhase("typing");
     setRun((r) => r + 1);
   };
@@ -66,19 +67,14 @@ export default function App() {
         <Reader poem={poem} />
       ) : (
         <Stage
-          key={`${p}-${i}-${run}`}
-          stanza={poem.stanzas[i]}
+          key={`${p}-${run}`}
+          text={poemText}
           base={base}
           paused={paused}
-          onDone={next}
+          onDone={onDone}
           ripping={phase === "ripping"}
         />
       )}
-      {phase === "typing" ? (
-        <div className="cap">
-          stanza {i + 1}/{poem.stanzas.length}
-        </div>
-      ) : null}
     </div>
   );
 }

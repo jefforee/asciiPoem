@@ -31,11 +31,17 @@ type State = {
   row: number;
   carriageX: number;
   targetCarriageX: number;
+  paperY: number;
+  targetPaperY: number;
   mode: Mode;
   lastIndex: number;
   ripActive: boolean;
   ripStartedAt: number;
 };
+
+// How far the paper rises per line feed. Half of a full line-height so the
+// motion reads as a subtle "feed" nudge rather than a full page scroll.
+const PAPER_RISE_PER_LINE = PAPER.lineHeight * 0.5;
 
 function makeState(): State {
   return {
@@ -43,6 +49,8 @@ function makeState(): State {
     row: 0,
     carriageX: CARRIAGE.homeX,
     targetCarriageX: CARRIAGE.homeX,
+    paperY: 0,
+    targetPaperY: 0,
     mode: "shift",
     lastIndex: 0,
     ripActive: false,
@@ -65,6 +73,7 @@ function processChar(
 
   if (ch === "\n") {
     s.targetCarriageX = CARRIAGE.homeX;
+    s.targetPaperY += PAPER_RISE_PER_LINE;
     s.col = 0;
     s.row += 1;
     s.mode = "return";
@@ -111,6 +120,7 @@ export function useMechanism(
       }
       s.lastIndex = animateFrom;
       s.carriageX = s.targetCarriageX;
+      s.paperY = s.targetPaperY;
       s.mode = "shift";
     }
 
@@ -157,6 +167,9 @@ export function useMechanism(
 
     const paperMesh = refs.paper.current?.mesh();
     if (paperMesh) {
+      const k = 1 - Math.exp(-dt / 0.35);
+      s.paperY += (s.targetPaperY - s.paperY) * k;
+
       if (s.ripActive) {
         const t = Math.min(
           1,
@@ -164,14 +177,14 @@ export function useMechanism(
         );
         const e = t * t;
         paperMesh.position.x = PAPER_REST_X + e * 8;
-        paperMesh.position.y = PAPER_REST_Y + e * 18;
+        paperMesh.position.y = PAPER_REST_Y + s.paperY + e * 18;
         paperMesh.position.z = PAPER_REST_Z + e * 22;
         paperMesh.rotation.x = PAPER_REST_PITCH + e * 1.3;
         paperMesh.rotation.z = e * 0.7;
         if (t >= 1) s.ripActive = false;
       } else {
         paperMesh.position.x = PAPER_REST_X;
-        paperMesh.position.y = PAPER_REST_Y;
+        paperMesh.position.y = PAPER_REST_Y + s.paperY;
         paperMesh.position.z = PAPER_REST_Z;
         paperMesh.rotation.x = PAPER_REST_PITCH;
         paperMesh.rotation.z = 0;

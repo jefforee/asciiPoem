@@ -1,33 +1,22 @@
 import { useEffect } from "react";
-import type { Stanza } from "../data/poems";
 import { useTypewriter } from "../hooks/useTypewriter";
 import Scene from "./typewriter3d/Scene";
 import styles from "./Stage.module.css";
 
 type Props = {
-  stanza: Stanza;
+  text: string;
   base: number;
   paused: boolean;
   onDone: () => void;
   ripping: boolean;
 };
 
-export default function Stage({
-  stanza,
-  base,
-  paused,
-  onDone,
-  ripping,
-}: Props) {
-  const { typed, done } = useTypewriter(
-    stanza.lines.join("\n"),
-    base,
-    paused,
-  );
+export default function Stage({ text, base, paused, onDone, ripping }: Props) {
+  const { typed, done } = useTypewriter(text, base, paused);
 
   useEffect(() => {
     if (!done || paused || ripping) return;
-    const t = setTimeout(onDone, 2200);
+    const t = setTimeout(onDone, 1800);
     return () => clearTimeout(t);
   }, [done, paused, onDone, ripping]);
 
