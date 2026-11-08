@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import Base from "./parts/Base";
 import Carriage from "./parts/Carriage";
+import Keyboard, { type KeyboardHandle } from "./parts/Keyboard";
 import Paper, { type PaperHandle } from "./parts/Paper";
 import PaperBail from "./parts/PaperBail";
 import Ribbon from "./parts/Ribbon";
@@ -16,6 +17,7 @@ type Props = {
 export default function Typewriter(_props: Props) {
   const paperRef = useRef<PaperHandle>(null);
   const basketRef = useRef<TypebasketHandle>(null);
+  const keyboardRef = useRef<KeyboardHandle>(null);
 
   return (
     <group position={[0, 0, 0]}>
@@ -28,7 +30,7 @@ export default function Typewriter(_props: Props) {
         <Paper ref={paperRef} />
         <PaperBail />
       </Carriage>
-      {/* keyboard lands in the next commit */}
+      <Keyboard ref={keyboardRef} />
     </group>
   );
 }
