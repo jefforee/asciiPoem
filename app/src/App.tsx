@@ -16,10 +16,6 @@ export default function App() {
 
   const poem = poems[p];
   const base = Math.round(300 / speed);
-  const prefix = poem.stanzas
-    .slice(0, i)
-    .map((s) => s.lines.join("\n"))
-    .join("\n\n");
 
   const next = useCallback(() => {
     if (i < poem.stanzas.length - 1) {
@@ -72,7 +68,6 @@ export default function App() {
         <Stage
           key={`${p}-${i}-${run}`}
           stanza={poem.stanzas[i]}
-          prefix={prefix}
           base={base}
           paused={paused}
           onDone={next}

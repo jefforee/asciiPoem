@@ -6,7 +6,6 @@ import styles from "./Stage.module.css";
 
 type Props = {
   stanza: Stanza;
-  prefix: string;
   base: number;
   paused: boolean;
   onDone: () => void;
@@ -15,7 +14,6 @@ type Props = {
 
 export default function Stage({
   stanza,
-  prefix,
   base,
   paused,
   onDone,
@@ -33,16 +31,9 @@ export default function Stage({
     return () => clearTimeout(t);
   }, [done, paused, onDone, ripping]);
 
-  // The 3D paper shows accumulated text across stanzas: prior stanzas
-  // are painted silently on mount (animateFrom marks the boundary) and
-  // the current stanza animates as `typed` grows.
-  const SEP = "\n\n";
-  const text = (prefix ? prefix + SEP : "") + typed;
-  const animateFrom = prefix ? prefix.length + SEP.length : 0;
-
   return (
     <div className={styles.stage}>
-      <Scene text={text} animateFrom={animateFrom} ripping={ripping} />
+      <Scene text={typed} animateFrom={0} ripping={ripping} />
     </div>
   );
 }

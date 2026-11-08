@@ -63,17 +63,6 @@
   letter-spacing: 0.08em;
 }
 
-.rart {
-  margin: 1.4rem auto 0.6rem;
-  width: fit-content;
-  max-width: 100%;
-  overflow-x: auto;
-  white-space: pre;
-  line-height: 1.15;
-  font-family: "Courier Prime", "Courier New", monospace;
-  font-size: clamp(0.7rem, 2.8vw, 1rem);
-}
-
 .rlines {
   margin: 0 auto 1rem;
   width: fit-content;
