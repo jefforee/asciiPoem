@@ -2,6 +2,9 @@ import { useRef } from "react";
 import Base from "./parts/Base";
 import Carriage from "./parts/Carriage";
 import Paper, { type PaperHandle } from "./parts/Paper";
+import PaperBail from "./parts/PaperBail";
+import Ribbon from "./parts/Ribbon";
+import RibbonSpool from "./parts/RibbonSpool";
 
 type Props = {
   index: number;
@@ -15,10 +18,14 @@ export default function Typewriter(_props: Props) {
   return (
     <group position={[0, 0, 0]}>
       <Base />
+      <RibbonSpool side="left" />
+      <RibbonSpool side="right" />
+      <Ribbon />
       <Carriage>
         <Paper ref={paperRef} />
+        <PaperBail />
       </Carriage>
-      {/* ribbon, bail, typebars, keys land in following commits */}
+      {/* typebasket and keyboard land in following commits */}
     </group>
   );
 }
