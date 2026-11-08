@@ -11,11 +11,7 @@ export default function Reader({ poem }: Props) {
       <div className={styles.bigshadow}>
         <div className={styles.bigsheet}>
           <h2>{poem.title}</h2>
-          {poem.stanzas.map((s, k) => (
-            <pre key={k} className={styles.rlines}>
-              {s.lines.join("\n")}
-            </pre>
-          ))}
+          <pre className={styles.rlines}>{poem.text}</pre>
         </div>
       </div>
     </div>

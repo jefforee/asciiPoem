@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Reader from "./components/Reader";
 import Stage from "./components/Stage";
 import { poems } from "./data/poems";
@@ -16,15 +16,7 @@ export default function App() {
   const poem = poems[p];
   const base = Math.round(300 / speed);
 
-  // The whole poem types on one sheet: title first, then a blank line,
-  // then stanzas joined with their own blank-line separators.
-  const poemText = useMemo(
-    () =>
-      poem.title +
-      "\n\n" +
-      poem.stanzas.map((s) => s.lines.join("\n")).join("\n\n"),
-    [poem],
-  );
+  const poemText = `${poem.title}\n\n${poem.text}`;
 
   const onDone = useCallback(() => {
     setPhase("ripping");
