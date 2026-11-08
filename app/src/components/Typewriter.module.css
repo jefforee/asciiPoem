@@ -54,7 +54,7 @@
   position: relative;
   padding: 3em 0 3.4em;
   clip-path: polygon(4% 0, 96% 0, 100% 100%, 0 100%);
-  background: linear-gradient(180deg, #78a39b 0, #55827a 30%, #3f6862 100%);
+  background: linear-gradient(180deg, #E6D5A8 0, #D0BB89 30%, #A2926B 100%);
 }
 
 .body::before {

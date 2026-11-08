@@ -59,7 +59,7 @@ export default function Typewriter({ ch, tick, base }: Props) {
       <div className={styles.body}>
         <div className={styles.grille} />
         <div className={styles.plate}>
-          <span>T Y P E W R I T E R</span>
+          <span>S H E F F</span>
         </div>
         {ROWS.map((r, ri) => (
           <div
