@@ -9,6 +9,7 @@ import PlatenKnob from "./PlatenKnob";
 type Props = {
   children?: ReactNode;
   crLeverRef?: Ref<CRLeverHandle>;
+  platenRef?: Ref<Group>;
 };
 
 /**
@@ -17,12 +18,12 @@ type Props = {
  * and the carriage-return lever. The parent ref drives its X translation.
  */
 const Carriage = forwardRef<Group, Props>(function Carriage(
-  { children, crLeverRef },
+  { children, crLeverRef, platenRef },
   ref,
 ) {
   return (
     <group ref={ref} position={[CARRIAGE.homeX, PLATEN.y, PLATEN.z]}>
-      <Platen />
+      <Platen ref={platenRef} />
       <group position={[-(PLATEN.length / 2 + KNOB.length / 2 + KNOB.gap), 0, 0]}>
         <PlatenKnob side="left" />
       </group>

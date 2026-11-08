@@ -22,11 +22,16 @@ export const KNOB = {
 };
 
 export const CARRIAGE = {
-  homeX: 8, // carriage starts shifted right so the left paper margin lines up with the strike point
-  minX: -8, // leftmost extent before "ding"
-  columnWidth: 0.42, // X-distance the carriage travels per character
-  shiftDuration: 0.08, // seconds
-  returnDuration: 0.55, // seconds for the fly-back on CR
+  // Home X is set so the paper's col-0 canvas position lines up with the
+  // world-fixed strike point: homeX = PAPER.width/2 − PAPER.leftMargin.
+  homeX: 7.1,
+  minX: -8,
+  // Scene-units per typed character. Chosen so the carriage travels the
+  // same world distance per char as the canvas glyph advance, keeping
+  // strike-point and canvas column aligned across a line.
+  columnWidth: 0.375,
+  shiftDuration: 0.07,
+  returnDuration: 0.55,
 };
 
 export const PAPER = {
