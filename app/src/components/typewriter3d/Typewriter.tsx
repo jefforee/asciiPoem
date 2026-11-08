@@ -1,5 +1,7 @@
+import { useRef } from "react";
 import Base from "./parts/Base";
 import Carriage from "./parts/Carriage";
+import Paper, { type PaperHandle } from "./parts/Paper";
 
 type Props = {
   index: number;
@@ -8,11 +10,15 @@ type Props = {
 };
 
 export default function Typewriter(_props: Props) {
+  const paperRef = useRef<PaperHandle>(null);
+
   return (
     <group position={[0, 0, 0]}>
       <Base />
-      <Carriage />
-      {/* paper, ribbon, bail, typebars, keys land in following commits */}
+      <Carriage>
+        <Paper ref={paperRef} />
+      </Carriage>
+      {/* ribbon, bail, typebars, keys land in following commits */}
     </group>
   );
 }
