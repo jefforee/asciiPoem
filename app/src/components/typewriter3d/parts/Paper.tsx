@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useMemo, useRef } from "react";
 import { CanvasTexture, DoubleSide, type Mesh } from "three";
-import { PAPER, PLATEN } from "../constants";
+import { PAPER, PAPER_LOCAL_X, PLATEN } from "../constants";
 import { PALETTE } from "../palette";
 
 export type PaperHandle = {
@@ -9,8 +9,10 @@ export type PaperHandle = {
   mesh(): Mesh | null;
 };
 
-const GLYPH_PX = 30;
-const GLYPH_W_RATIO = 0.6; // monospace glyph advance / font px
+// Glyph advance (canvas px) must equal CARRIAGE.columnWidth * pixelsPerUnit
+// so the typing visually tracks the carriage travel.
+const GLYPH_PX = 22;
+const GLYPH_W_RATIO = 0.613;
 
 function paintBackground(
   ctx: CanvasRenderingContext2D,
@@ -114,7 +116,11 @@ const Paper = forwardRef<PaperHandle>(function Paper(_props, ref) {
   return (
     <mesh
       ref={meshRef}
-      position={[0, PLATEN.radius + PAPER.height / 2, PLATEN.radius + 0.08]}
+      position={[
+        PAPER_LOCAL_X,
+        PLATEN.radius + PAPER.height / 2,
+        PLATEN.radius + 0.08,
+      ]}
       rotation={[-0.14, 0, 0]}
       castShadow
     >

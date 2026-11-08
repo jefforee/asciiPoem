@@ -1,7 +1,7 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import type { Group } from "three";
-import { CARRIAGE, PAPER, PLATEN } from "./constants";
+import { CARRIAGE, PAPER, PAPER_LOCAL_X, PLATEN } from "./constants";
 import { charToBarIndex } from "./charToBar";
 import { charToKey } from "./charToKey";
 import type { CRLeverHandle } from "./parts/CRLever";
@@ -18,6 +18,7 @@ type Refs = {
   crLever: RefObject<CRLeverHandle>;
 };
 
+const PAPER_REST_X = PAPER_LOCAL_X;
 const PAPER_REST_Y = PLATEN.radius + PAPER.height / 2;
 const PAPER_REST_Z = PLATEN.radius + 0.08;
 const PAPER_REST_PITCH = -0.14;
@@ -174,14 +175,14 @@ export function useMechanism(
           (performance.now() - s.ripStartedAt) / RIP_MS,
         );
         const e = t * t;
-        paperMesh.position.x = e * 8;
+        paperMesh.position.x = PAPER_REST_X + e * 8;
         paperMesh.position.y = PAPER_REST_Y + s.paperY + e * 18;
         paperMesh.position.z = PAPER_REST_Z + e * 22;
         paperMesh.rotation.x = PAPER_REST_PITCH + e * 1.3;
         paperMesh.rotation.z = e * 0.7;
         if (t >= 1) s.ripActive = false;
       } else {
-        paperMesh.position.x = 0;
+        paperMesh.position.x = PAPER_REST_X;
         paperMesh.position.y = PAPER_REST_Y + s.paperY;
         paperMesh.position.z = PAPER_REST_Z;
         paperMesh.rotation.x = PAPER_REST_PITCH;

@@ -1,67 +1,67 @@
 // All units are "scene units" (≈ 1cm). Keep every part sized relative to these.
 
 export const BASE = {
-  width: 28,
-  height: 6,
-  depth: 20,
-  topWidth: 24, // front silhouette is trapezoidal (narrower at top)
-  // The base's local origin sits at the centre of the bottom face.
+  width: 30,
+  height: 7,
+  depth: 22,
+  topWidth: 25,
 };
 
 export const PLATEN = {
-  radius: 1.6,
-  length: 22,
-  y: 7.6, // vertical centre of the platen above the table
-  z: -5, // toward the back of the base
+  radius: 1.5,
+  length: 18,
+  y: 8.6,
+  z: -5.5,
 };
 
 export const KNOB = {
-  radius: 2.1,
-  length: 1.2,
+  radius: 2.0,
+  length: 1.1,
   gap: 0.25,
 };
 
+export const PAPER = {
+  width: 16,
+  height: 18,
+  pixelsPerUnit: 54,
+  columns: 48,
+  lineHeight: 1.3,
+  topMargin: 1.6,
+  leftMargin: 1.0,
+};
+
+// Paper's local X offset inside the carriage is set so canvas column 0
+// lives at carriage-local x = 0. That way the carriage can sit centred
+// at home (homeX = 0) and the platen stays symmetric relative to the
+// body, which reads much more like a real typewriter.
+export const PAPER_LOCAL_X = PAPER.width / 2 - PAPER.leftMargin;
+
 export const CARRIAGE = {
-  // Home X is set so the paper's col-0 canvas position lines up with the
-  // world-fixed strike point: homeX = PAPER.width/2 − PAPER.leftMargin.
-  homeX: 7.1,
-  minX: -8,
-  // Scene-units per typed character. Chosen so the carriage travels the
-  // same world distance per char as the canvas glyph advance, keeping
-  // strike-point and canvas column aligned across a line.
-  columnWidth: 0.375,
+  homeX: 0,
+  minX: -12,
+  // Scene-units per typed character. Set equal to the canvas glyph advance
+  // so strike-point and canvas column stay aligned across a full line.
+  columnWidth: 0.25,
   shiftDuration: 0.07,
   returnDuration: 0.55,
 };
 
-export const PAPER = {
-  width: 17,
-  height: 22,
-  // Paper wraps the platen; its local origin is the top of the sheet above the platen.
-  pixelsPerUnit: 48,
-  columns: 48, // typable columns across the paper
-  lineHeight: 1.4, // scene units per line
-  topMargin: 2.2, // scene units from top of sheet to first line baseline
-  leftMargin: 1.4, // scene units from left edge of sheet to column 0
-};
-
 export const STRIKE = {
-  // Strike point in Typewriter-local coords — top of platen, centred in X.
   x: 0,
   y: PLATEN.y + PLATEN.radius + 0.05,
   z: PLATEN.z + 0.1,
 };
 
 export const TYPEBAR = {
-  count: 24,
-  arcRadius: 4.5, // horizontal distance from each pivot to the strike centre
-  pivotY: 3.9,
-  arcSpan: Math.PI / 1.3, // total angular spread of the typebasket (~138°)
+  count: 22,
+  arcRadius: 4.3,
+  pivotY: 4.6,
+  arcSpan: Math.PI / 1.35,
   length: 7,
   width: 0.34,
   thickness: 0.16,
-  restPitch: -0.55, // hammer hangs below horizontal at rest
-  strikePitch: 0.874, // sin⁻¹((STRIKE.y − pivotY)/length); hammer at platen
+  restPitch: -0.55,
+  strikePitch: Math.asin((STRIKE.y - 4.6) / 7),
   strikeMs: 95,
   hammerW: 0.55,
   hammerH: 0.75,
@@ -70,31 +70,31 @@ export const TYPEBAR = {
 
 export const KEYBOARD = {
   rows: 4,
-  rowGap: 2.1,
-  colGap: 2.0,
-  frontZ: 7.4, // Z of the front-most row (closest to the typist)
-  baseY: 4.4, // Y of the lowest row's key top
-  tier: 0.4, // Y rise per row back
-  tilt: Math.PI / 14, // keyboard surface tilt
-  keySize: 1.55,
-  keyHeight: 0.9,
-  travel: 0.35, // Y depression on press
+  rowGap: 1.85,
+  colGap: 1.85,
+  frontZ: 8.5,
+  baseY: 5.2,
+  tier: 0.3,
+  tilt: Math.PI / 14,
+  keySize: 1.4,
+  keyHeight: 0.8,
+  travel: 0.32,
   pressMs: 110,
 };
 
 export const RIBBON = {
-  spoolRadius: 1.3,
-  spoolHeight: 1.2,
-  spoolY: 5.3,
-  spoolZ: -1.6,
-  spoolX: 9,
-  stripWidth: 0.6,
+  spoolRadius: 1.2,
+  spoolHeight: 1.1,
+  spoolY: 6.2,
+  spoolZ: -2.3,
+  spoolX: 8.2,
+  stripWidth: 0.55,
   stripHeight: 0.08,
 };
 
 export const PAPER_BAIL = {
   radius: 0.12,
-  length: 18,
+  length: 15,
   y: PLATEN.y + PLATEN.radius + 0.4,
   z: PLATEN.z + 1.3,
 };
