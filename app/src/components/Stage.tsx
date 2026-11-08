@@ -42,8 +42,12 @@ export default function Stage({
 
   return (
     <div className={styles.stage}>
-      <pre className={styles.art}>{stanza.art}</pre>
-      <Scene text={text} animateFrom={animateFrom} ripping={ripping} />
+      <Scene
+        text={text}
+        animateFrom={animateFrom}
+        header={stanza.art}
+        ripping={ripping}
+      />
     </div>
   );
 }

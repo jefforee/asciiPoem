@@ -5,6 +5,7 @@ import { PALETTE } from "../palette";
 
 export type PaperHandle = {
   draw(ch: string, col: number, row: number): void;
+  drawHeader(text: string): number;
   reset(): void;
   mesh(): Mesh | null;
 };
@@ -85,19 +86,39 @@ const Paper = forwardRef<PaperHandle>(function Paper(_props, ref) {
     return { texture, ctx, size: { w, h } };
   }, []);
 
+  const advancePx = GLYPH_W_RATIO * GLYPH_PX;
+  const leftPx = PAPER.leftMargin * PAPER.pixelsPerUnit;
+  const linePx = PAPER.lineHeight * PAPER.pixelsPerUnit;
+  const topPx = PAPER.topMargin * PAPER.pixelsPerUnit;
+
   useImperativeHandle(
     ref,
     () => ({
       draw(ch, col, row) {
         if (!ch || ch === "\n") return;
-        if (ch === " ") return; // spaces leave no ink
-        const x =
-          (PAPER.leftMargin + col * GLYPH_W_RATIO * (GLYPH_PX / PAPER.pixelsPerUnit)) *
-          PAPER.pixelsPerUnit;
-        const y =
-          (PAPER.topMargin + row * PAPER.lineHeight) * PAPER.pixelsPerUnit;
+        if (ch === " ") return;
+        const x = leftPx + col * advancePx;
+        const y = topPx + row * linePx;
         drawGlyph(ctx, ch, x, y);
         texture.needsUpdate = true;
+      },
+      drawHeader(text) {
+        // Trim leading/trailing blank lines so the art hugs the top margin.
+        const lines = text.split("\n");
+        while (lines.length && lines[0].trim() === "") lines.shift();
+        while (lines.length && lines[lines.length - 1].trim() === "") {
+          lines.pop();
+        }
+        for (let r = 0; r < lines.length; r++) {
+          const line = lines[r];
+          for (let c = 0; c < line.length; c++) {
+            const ch = line[c];
+            if (ch === " ") continue;
+            drawGlyph(ctx, ch, leftPx + c * advancePx, topPx + r * linePx);
+          }
+        }
+        texture.needsUpdate = true;
+        return lines.length;
       },
       reset() {
         paintBackground(ctx, size.w, size.h);
@@ -107,7 +128,7 @@ const Paper = forwardRef<PaperHandle>(function Paper(_props, ref) {
         return meshRef.current;
       },
     }),
-    [ctx, size.w, size.h, texture],
+    [advancePx, ctx, leftPx, linePx, size.w, size.h, texture, topPx],
   );
 
   // Positioned inside the carriage: paper's bottom edge sits just above the

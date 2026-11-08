@@ -99,6 +99,7 @@ export function useMechanism(
   text: string,
   animateFrom: number,
   ripping: boolean,
+  header?: string,
 ): void {
   const state = useRef<State>(makeState());
   const didInit = useRef(false);
@@ -106,12 +107,20 @@ export function useMechanism(
   useEffect(() => {
     const s = state.current;
 
-    // First render: paint the prefix (everything up to animateFrom)
-    // silently so previously-completed stanzas appear instantly on
-    // the paper and the carriage/platen/paper snap to post-prefix state.
+    // First render: pre-paint the stanza's ASCII art as a page header,
+    // then paint the prefix silently so previously-completed stanzas
+    // appear instantly and the carriage/platen/paper snap to their
+    // post-prefix state.
     if (!didInit.current) {
       didInit.current = true;
       refs.paper.current?.reset();
+
+      if (header) {
+        const headerRows = refs.paper.current?.drawHeader(header) ?? 0;
+        // Skip the header rows + a blank gap line before typing begins.
+        s.row = headerRows + 1;
+      }
+
       for (let i = 0; i < animateFrom; i++) {
         processChar(text[i], s, refs, true);
       }
@@ -122,14 +131,20 @@ export function useMechanism(
       s.mode = "shift";
     }
 
-    // Each subsequent render advances through newly-typed characters
-    // with full mechanism animations.
     while (s.lastIndex < text.length) {
       const ch = text[s.lastIndex];
       s.lastIndex += 1;
       processChar(ch, s, refs, false);
     }
-  }, [text, animateFrom, refs.basket, refs.crLever, refs.keyboard, refs.paper]);
+  }, [
+    text,
+    animateFrom,
+    header,
+    refs.basket,
+    refs.crLever,
+    refs.keyboard,
+    refs.paper,
+  ]);
 
   useEffect(() => {
     if (ripping) {

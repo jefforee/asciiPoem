@@ -6,10 +6,11 @@ import styles from "./Scene.module.css";
 type Props = {
   text: string;
   animateFrom: number;
+  header?: string;
   ripping: boolean;
 };
 
-export default function Scene({ text, animateFrom, ripping }: Props) {
+export default function Scene({ text, animateFrom, header, ripping }: Props) {
   return (
     <div className={styles.scene}>
       <Canvas shadows dpr={[1, 2]} gl={{ antialias: true }}>
@@ -27,7 +28,12 @@ export default function Scene({ text, animateFrom, ripping }: Props) {
           shadow-camera-bottom={-30}
         />
         <directionalLight position={[-16, 12, -6]} intensity={0.35} />
-        <Typewriter text={text} animateFrom={animateFrom} ripping={ripping} />
+        <Typewriter
+          text={text}
+          animateFrom={animateFrom}
+          header={header}
+          ripping={ripping}
+        />
         <mesh
           rotation={[-Math.PI / 2, 0, 0]}
           position={[0, -1.2, 0]}

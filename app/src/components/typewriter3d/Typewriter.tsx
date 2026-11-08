@@ -14,10 +14,16 @@ import { useMechanism } from "./useMechanism";
 type Props = {
   text: string;
   animateFrom: number;
+  header?: string;
   ripping: boolean;
 };
 
-export default function Typewriter({ text, animateFrom, ripping }: Props) {
+export default function Typewriter({
+  text,
+  animateFrom,
+  header,
+  ripping,
+}: Props) {
   const paperRef = useRef<PaperHandle>(null);
   const basketRef = useRef<TypebasketHandle>(null);
   const keyboardRef = useRef<KeyboardHandle>(null);
@@ -37,6 +43,7 @@ export default function Typewriter({ text, animateFrom, ripping }: Props) {
     text,
     animateFrom,
     ripping,
+    header,
   );
 
   return (
