@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import type { Stanza } from "../data/poems";
 import { useTypewriter } from "../hooks/useTypewriter";
-import Paper from "./Paper";
-import Typewriter from "./Typewriter";
+import Scene from "./typewriter3d/Scene";
 import styles from "./Stage.module.css";
 
 type Props = {
@@ -22,7 +21,7 @@ export default function Stage({
   onDone,
   ripping,
 }: Props) {
-  const { typed, index, done } = useTypewriter(
+  const { typed, done } = useTypewriter(
     stanza.lines.join("\n"),
     base,
     paused,
@@ -34,13 +33,17 @@ export default function Stage({
     return () => clearTimeout(t);
   }, [done, paused, onDone, ripping]);
 
-  const text = (prefix ? prefix + "\n\n" : "") + typed;
+  // The 3D paper shows accumulated text across stanzas: prior stanzas
+  // are painted silently on mount (animateFrom marks the boundary) and
+  // the current stanza animates as `typed` grows.
+  const SEP = "\n\n";
+  const text = (prefix ? prefix + SEP : "") + typed;
+  const animateFrom = prefix ? prefix.length + SEP.length : 0;
 
   return (
     <div className={styles.stage}>
       <pre className={styles.art}>{stanza.art}</pre>
-      <Paper text={text} ripping={ripping} />
-      <Typewriter ch={typed[index - 1]} tick={index} base={base} />
+      <Scene text={text} animateFrom={animateFrom} ripping={ripping} />
     </div>
   );
 }

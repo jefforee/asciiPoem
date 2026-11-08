@@ -12,12 +12,12 @@ import Typebasket, { type TypebasketHandle } from "./parts/Typebasket";
 import { useMechanism } from "./useMechanism";
 
 type Props = {
-  index: number;
-  typed: string;
+  text: string;
+  animateFrom: number;
   ripping: boolean;
 };
 
-export default function Typewriter({ index, typed, ripping }: Props) {
+export default function Typewriter({ text, animateFrom, ripping }: Props) {
   const paperRef = useRef<PaperHandle>(null);
   const basketRef = useRef<TypebasketHandle>(null);
   const keyboardRef = useRef<KeyboardHandle>(null);
@@ -34,8 +34,8 @@ export default function Typewriter({ index, typed, ripping }: Props) {
       keyboard: keyboardRef,
       crLever: crLeverRef,
     },
-    typed,
-    index,
+    text,
+    animateFrom,
     ripping,
   );
 

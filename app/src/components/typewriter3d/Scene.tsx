@@ -4,12 +4,12 @@ import Typewriter from "./Typewriter";
 import styles from "./Scene.module.css";
 
 type Props = {
-  index: number;
-  typed: string;
+  text: string;
+  animateFrom: number;
   ripping: boolean;
 };
 
-export default function Scene({ index, typed, ripping }: Props) {
+export default function Scene({ text, animateFrom, ripping }: Props) {
   return (
     <div className={styles.scene}>
       <Canvas shadows dpr={[1, 2]} gl={{ antialias: true }}>
@@ -27,7 +27,7 @@ export default function Scene({ index, typed, ripping }: Props) {
           shadow-camera-bottom={-30}
         />
         <directionalLight position={[-16, 10, -6]} intensity={0.35} />
-        <Typewriter index={index} typed={typed} ripping={ripping} />
+        <Typewriter text={text} animateFrom={animateFrom} ripping={ripping} />
         <mesh
           rotation={[-Math.PI / 2, 0, 0]}
           position={[0, -5, 0]}

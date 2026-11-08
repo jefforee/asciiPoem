@@ -57,54 +57,79 @@ function makeState(): State {
   };
 }
 
+function processChar(
+  ch: string,
+  s: State,
+  refs: Refs,
+  silent: boolean,
+): void {
+  if (!ch) return;
+
+  if (!silent) {
+    const keyLabel = charToKey(ch);
+    if (keyLabel) refs.keyboard.current?.press(keyLabel);
+  }
+
+  if (ch === "\n") {
+    s.targetCarriageX = CARRIAGE.homeX;
+    s.targetPlatenRot -= PAPER.lineHeight / PLATEN.radius;
+    s.targetPaperY += PAPER.lineHeight;
+    s.col = 0;
+    s.row += 1;
+    s.mode = "return";
+    if (!silent) refs.crLever.current?.swing();
+    return;
+  }
+
+  if (ch !== " ") {
+    if (!silent) {
+      const barIdx = charToBarIndex(ch);
+      if (barIdx != null) refs.basket.current?.strike(barIdx);
+    }
+    refs.paper.current?.draw(ch, s.col, s.row);
+  }
+  s.targetCarriageX -= CARRIAGE.columnWidth;
+  s.col += 1;
+  s.mode = "shift";
+}
+
 export function useMechanism(
   refs: Refs,
-  typed: string,
-  index: number,
+  text: string,
+  animateFrom: number,
   ripping: boolean,
 ): void {
   const state = useRef<State>(makeState());
+  const didInit = useRef(false);
 
-  // Reset on source-text change (new poem / stanza / replay).
-  useEffect(() => {
-    state.current = makeState();
-    refs.paper.current?.reset();
-  }, [typed, refs.paper]);
-
-  // Advance through newly-typed characters.
   useEffect(() => {
     const s = state.current;
-    while (s.lastIndex < index) {
-      const ch = typed[s.lastIndex];
-      s.lastIndex++;
-      if (!ch) continue;
 
-      const keyLabel = charToKey(ch);
-      if (keyLabel) refs.keyboard.current?.press(keyLabel);
-
-      if (ch === "\n") {
-        s.targetCarriageX = CARRIAGE.homeX;
-        s.targetPlatenRot -= PAPER.lineHeight / PLATEN.radius;
-        s.targetPaperY += PAPER.lineHeight;
-        s.col = 0;
-        s.row += 1;
-        s.mode = "return";
-        refs.crLever.current?.swing();
-        continue;
+    // First render: paint the prefix (everything up to animateFrom)
+    // silently so previously-completed stanzas appear instantly on
+    // the paper and the carriage/platen/paper snap to post-prefix state.
+    if (!didInit.current) {
+      didInit.current = true;
+      refs.paper.current?.reset();
+      for (let i = 0; i < animateFrom; i++) {
+        processChar(text[i], s, refs, true);
       }
-
-      if (ch !== " ") {
-        const barIdx = charToBarIndex(ch);
-        if (barIdx != null) refs.basket.current?.strike(barIdx);
-        refs.paper.current?.draw(ch, s.col, s.row);
-      }
-      s.targetCarriageX -= CARRIAGE.columnWidth;
-      s.col += 1;
+      s.lastIndex = animateFrom;
+      s.carriageX = s.targetCarriageX;
+      s.platenRot = s.targetPlatenRot;
+      s.paperY = s.targetPaperY;
       s.mode = "shift";
     }
-  }, [index, typed, refs.basket, refs.crLever, refs.keyboard, refs.paper]);
 
-  // Mark rip window — the actual fly-off runs from useFrame.
+    // Each subsequent render advances through newly-typed characters
+    // with full mechanism animations.
+    while (s.lastIndex < text.length) {
+      const ch = text[s.lastIndex];
+      s.lastIndex += 1;
+      processChar(ch, s, refs, false);
+    }
+  }, [text, animateFrom, refs.basket, refs.crLever, refs.keyboard, refs.paper]);
+
   useEffect(() => {
     if (ripping) {
       state.current.ripStartedAt = performance.now();
@@ -115,7 +140,6 @@ export function useMechanism(
   useFrame((_, dt) => {
     const s = state.current;
 
-    // Carriage: exponential ease to target, speed depends on mode.
     const car = refs.carriage.current;
     if (car) {
       const dur = s.mode === "return"
@@ -132,7 +156,6 @@ export function useMechanism(
       }
     }
 
-    // Platen rotation (visible via marker stripe).
     const pl = refs.platen.current;
     if (pl) {
       const k = 1 - Math.exp(-dt / 0.28);
@@ -140,8 +163,6 @@ export function useMechanism(
       pl.rotation.y = s.platenRot;
     }
 
-    // Paper rise relative to its rest position inside the carriage; also
-    // owns the rip-off trajectory.
     const paperMesh = refs.paper.current?.mesh();
     if (paperMesh) {
       const k = 1 - Math.exp(-dt / 0.28);
