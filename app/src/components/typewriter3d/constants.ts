@@ -52,34 +52,53 @@ export const STRIKE = {
   z: PLATEN.z + 0.1,
 };
 
+// Typebar geometry — pivots sit just above the body deck so bars are
+// visibly outside the chassis. arcRadius is derived so the hammer at
+// strikePitch lands exactly on STRIKE.
+const _TB_PIVOT_Y = 7.6;
+const _TB_LENGTH = 4;
+const _TB_STRIKE_PITCH = Math.asin((STRIKE.y - _TB_PIVOT_Y) / _TB_LENGTH);
+
 export const TYPEBAR = {
   count: 22,
-  arcRadius: 4.3,
-  pivotY: 4.6,
+  pivotY: _TB_PIVOT_Y,
+  length: _TB_LENGTH,
+  arcRadius: _TB_LENGTH * Math.cos(_TB_STRIKE_PITCH),
   arcSpan: Math.PI / 1.35,
-  length: 7,
-  width: 0.34,
-  thickness: 0.16,
-  restPitch: -0.55,
-  strikePitch: Math.asin((STRIKE.y - 4.6) / 7),
+  width: 0.3,
+  thickness: 0.15,
+  restPitch: -0.12,
+  strikePitch: _TB_STRIKE_PITCH,
   strikeMs: 95,
-  hammerW: 0.55,
-  hammerH: 0.75,
-  hammerD: 0.3,
+  hammerW: 0.5,
+  hammerH: 0.7,
+  hammerD: 0.28,
 };
 
 export const KEYBOARD = {
   rows: 4,
-  rowGap: 1.85,
-  colGap: 1.85,
-  frontZ: 8.5,
-  baseY: 5.2,
-  tier: 0.3,
+  rowGap: 1.75,
+  colGap: 1.8,
+  frontZ: 8.3,
+  baseY: 7.5, // cap-centre Y; rim rests on the deck top
+  tier: 0.08,
   tilt: Math.PI / 14,
-  keySize: 1.4,
-  keyHeight: 0.8,
-  travel: 0.32,
+  keySize: 1.35,
+  keyHeight: 0.75,
+  travel: 0.28,
   pressMs: 110,
+};
+
+export const NAMEPLATE = {
+  width: 7,
+  height: 1.5,
+  thickness: 0.18,
+  y: 3.5,
+};
+
+export const DECK = {
+  thickness: 0.1,
+  margin: 0.4,
 };
 
 export const RIBBON = {
