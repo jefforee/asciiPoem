@@ -4,14 +4,11 @@ import { PLATEN } from "../constants";
 import { PALETTE } from "../palette";
 
 /**
- * The platen is the rubber cylinder paper wraps around. Modelled as a
- * group so the mechanism can rotate it about its symmetry axis on line
- * feed; a visible dark marker stripe makes that rotation legible.
- *
- * The outer group carries a Z-rotation that orients the cylinder's axis
- * along world X. Setting rotation.y on the group then rotates every child
- * about the platen's own symmetry axis (because Euler order is XYZ, Y is
- * applied before Z).
+ * The platen is the rubber cylinder paper wraps around. A smooth cylinder
+ * oriented along world X. The ref is kept (useMechanism no longer drives
+ * rotation, but downstream code may want it) — the cylinder itself stays
+ * static because a solid rubber platen rotating about its symmetry axis
+ * produces no visible motion anyway.
  */
 const Platen = forwardRef<Group>(function Platen(_props, ref) {
   return (
@@ -24,14 +21,6 @@ const Platen = forwardRef<Group>(function Platen(_props, ref) {
           color={PALETTE.platenRubber}
           roughness={0.85}
           metalness={0.05}
-        />
-      </mesh>
-      {/* visible rotation marker — a thin dark stripe along the cylinder */}
-      <mesh position={[0, 0, PLATEN.radius - 0.015]}>
-        <boxGeometry args={[0.07, PLATEN.length * 0.98, 0.04]} />
-        <meshStandardMaterial
-          color={PALETTE.frameBlack}
-          roughness={0.5}
         />
       </mesh>
       {/* end caps — chrome rings */}

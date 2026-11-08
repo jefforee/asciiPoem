@@ -9,7 +9,7 @@ export const BASE = {
 
 export const PLATEN = {
   radius: 1.5,
-  length: 18,
+  length: 16,
   y: 8.6,
   z: -5.5,
 };
@@ -21,7 +21,7 @@ export const KNOB = {
 };
 
 export const PAPER = {
-  width: 16,
+  width: 14,
   height: 18,
   pixelsPerUnit: 54,
   columns: 48,
@@ -30,17 +30,17 @@ export const PAPER = {
   leftMargin: 1.0,
 };
 
-// Paper's local X offset inside the carriage is set so canvas column 0
-// lives at carriage-local x = 0. That way the carriage can sit centred
-// at home (homeX = 0) and the platen stays symmetric relative to the
-// body, which reads much more like a real typewriter.
-export const PAPER_LOCAL_X = PAPER.width / 2 - PAPER.leftMargin;
+// Paper is centred on the carriage so the platen, paper, and knobs read
+// as a symmetric assembly. The carriage itself is shifted right at home
+// so that the paper's canvas col-0 lands on the world-fixed strike point.
+export const PAPER_LOCAL_X = 0;
 
 export const CARRIAGE = {
-  homeX: 0,
-  minX: -12,
-  // Scene-units per typed character. Set equal to the canvas glyph advance
-  // so strike-point and canvas column stay aligned across a full line.
+  // homeX puts canvas col-0 under the strike at world x = 0:
+  //   col-0 world = homeX + PAPER_LOCAL_X + (-width/2 + leftMargin)
+  //              = homeX + 0 + (-7 + 1) = homeX - 6
+  homeX: 6,
+  minX: -6,
   columnWidth: 0.25,
   shiftDuration: 0.07,
   returnDuration: 0.55,
@@ -111,9 +111,11 @@ export const RIBBON = {
   stripHeight: 0.08,
 };
 
+// LOCAL to the carriage (not world). The carriage's origin sits at the
+// platen's centre, so y/z here are offsets from there.
 export const PAPER_BAIL = {
   radius: 0.12,
-  length: 15,
-  y: PLATEN.y + PLATEN.radius + 0.4,
-  z: PLATEN.z + 1.3,
+  length: 13,
+  y: PLATEN.radius + 0.4,
+  z: 1.3,
 };

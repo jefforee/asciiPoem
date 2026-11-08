@@ -31,8 +31,6 @@ type State = {
   row: number;
   carriageX: number;
   targetCarriageX: number;
-  platenRot: number;
-  targetPlatenRot: number;
   paperY: number;
   targetPaperY: number;
   mode: Mode;
@@ -47,8 +45,6 @@ function makeState(): State {
     row: 0,
     carriageX: CARRIAGE.homeX,
     targetCarriageX: CARRIAGE.homeX,
-    platenRot: 0,
-    targetPlatenRot: 0,
     paperY: 0,
     targetPaperY: 0,
     mode: "shift",
@@ -73,7 +69,6 @@ function processChar(
 
   if (ch === "\n") {
     s.targetCarriageX = CARRIAGE.homeX;
-    s.targetPlatenRot -= PAPER.lineHeight / PLATEN.radius;
     s.targetPaperY += PAPER.lineHeight;
     s.col = 0;
     s.row += 1;
@@ -107,17 +102,12 @@ export function useMechanism(
   useEffect(() => {
     const s = state.current;
 
-    // First render: pre-paint the stanza's ASCII art as a page header,
-    // then paint the prefix silently so previously-completed stanzas
-    // appear instantly and the carriage/platen/paper snap to their
-    // post-prefix state.
     if (!didInit.current) {
       didInit.current = true;
       refs.paper.current?.reset();
 
       if (header) {
         const headerRows = refs.paper.current?.drawHeader(header) ?? 0;
-        // Skip the header rows + a blank gap line before typing begins.
         s.row = headerRows + 1;
       }
 
@@ -126,7 +116,6 @@ export function useMechanism(
       }
       s.lastIndex = animateFrom;
       s.carriageX = s.targetCarriageX;
-      s.platenRot = s.targetPlatenRot;
       s.paperY = s.targetPaperY;
       s.mode = "shift";
     }
@@ -170,13 +159,6 @@ export function useMechanism(
       ) {
         s.mode = "shift";
       }
-    }
-
-    const pl = refs.platen.current;
-    if (pl) {
-      const k = 1 - Math.exp(-dt / 0.28);
-      s.platenRot += (s.targetPlatenRot - s.platenRot) * k;
-      pl.rotation.y = s.platenRot;
     }
 
     const paperMesh = refs.paper.current?.mesh();
