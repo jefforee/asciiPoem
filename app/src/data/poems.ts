@@ -23,4 +23,13 @@ and shows what it has kept.
 A shell, a coin, a name
 written small in sand.`,
   },
+  {
+    id: "morning-rain",
+    title: "Morning Rain",
+    text: `Rain taps the window
+while the day wakes slowly.
+
+A quiet street shines
+beneath the silver sky.`,
+  },
 ];
