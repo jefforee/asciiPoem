@@ -48,16 +48,19 @@ export const STRIKE = {
 };
 
 export const TYPEBAR = {
-  count: 32,
-  arcRadius: 6.2,
-  pivotY: 3.5,
-  pivotZ: 1.5, // in front of the strike line; bars swing up and back to hit the platen
-  restPitch: Math.PI * 0.42, // angle of a resting bar below horizontal
-  strikePitch: -0.05, // angle when the hammer is at the platen
+  count: 24,
+  arcRadius: 4.5, // horizontal distance from each pivot to the strike centre
+  pivotY: 3.9,
+  arcSpan: Math.PI / 1.3, // total angular spread of the typebasket (~138°)
   length: 7,
-  width: 0.35,
-  thickness: 0.18,
-  strikeMs: 110,
+  width: 0.34,
+  thickness: 0.16,
+  restPitch: -0.55, // hammer hangs below horizontal at rest
+  strikePitch: 0.874, // sin⁻¹((STRIKE.y − pivotY)/length); hammer at platen
+  strikeMs: 95,
+  hammerW: 0.55,
+  hammerH: 0.75,
+  hammerD: 0.3,
 };
 
 export const KEYBOARD = {
