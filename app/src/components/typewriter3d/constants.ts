@@ -2,7 +2,7 @@
 
 export const BASE = {
   width: 30,
-  height: 7,
+  height: 6.95,
   depth: 22,
   topWidth: 25,
 };
@@ -22,7 +22,7 @@ export const KNOB = {
 
 export const PAPER = {
   width: 14,
-  height: 18,
+  height: 12,
   pixelsPerUnit: 54,
   columns: 48,
   lineHeight: 1.3,
@@ -35,11 +35,8 @@ export const PAPER = {
 // so that the paper's canvas col-0 lands on the world-fixed strike point.
 export const PAPER_LOCAL_X = 0;
 
-// Paper's resting Y inside the carriage, chosen so row 0 (near the top
-// of the canvas) sits AT the strike line when paperY = 0. That means at
-// start, the sheet is mostly tucked inside the body and only the top
-// margin pokes above the platen — paper then emerges from the machine
-// as line-feeds raise it.
+// Keep the first text baseline at the strike line while tucking the sheet's
+// lower edge into the casing. Line-feeds raise the paper as typing advances.
 //   row0 plane-local y = PAPER.height/2 - PAPER.topMargin
 //   want: PAPER_REST_Y + row0_local + PLATEN.y = STRIKE.y
 export const PAPER_REST_Y_LOCAL =
@@ -59,7 +56,7 @@ export const CARRIAGE = {
 export const STRIKE = {
   x: 0,
   y: PLATEN.y + PLATEN.radius + 0.05,
-  z: PLATEN.z + 0.1,
+  z: PLATEN.z + PLATEN.radius + 0.1,
 };
 
 // Typebar geometry — pivots sit just above the body deck so bars are
@@ -70,19 +67,19 @@ const _TB_LENGTH = 4;
 const _TB_STRIKE_PITCH = Math.asin((STRIKE.y - _TB_PIVOT_Y) / _TB_LENGTH);
 
 export const TYPEBAR = {
-  count: 22,
+  count: 36,
   pivotY: _TB_PIVOT_Y,
   length: _TB_LENGTH,
   arcRadius: _TB_LENGTH * Math.cos(_TB_STRIKE_PITCH),
   arcSpan: Math.PI / 1.35,
-  width: 0.3,
-  thickness: 0.15,
+  width: 0.12,
+  thickness: 0.1,
   restPitch: -0.12,
   strikePitch: _TB_STRIKE_PITCH,
   strikeMs: 95,
-  hammerW: 0.5,
-  hammerH: 0.7,
-  hammerD: 0.28,
+  hammerW: 0.2,
+  hammerH: 0.24,
+  hammerD: 0.14,
 };
 
 export const KEYBOARD = {
@@ -90,9 +87,8 @@ export const KEYBOARD = {
   rowGap: 1.75,
   colGap: 1.8,
   frontZ: 8.3,
-  baseY: 7.5, // cap-centre Y; rim rests on the deck top
-  tier: 0.08,
-  tilt: Math.PI / 14,
+  baseY: 4.9, // cap-centre Y of the front character row
+  tier: 0.35,
   keySize: 1.35,
   keyHeight: 0.75,
   travel: 0.28,
@@ -112,10 +108,10 @@ export const DECK = {
 };
 
 export const RIBBON = {
-  spoolRadius: 1.2,
-  spoolHeight: 1.1,
-  spoolY: 6.2,
-  spoolZ: -2.3,
+  spoolRadius: 0.85,
+  spoolHeight: 0.9,
+  spoolY: 6.8,
+  spoolZ: -3.75,
   spoolX: 8.2,
   stripWidth: 0.55,
   stripHeight: 0.08,

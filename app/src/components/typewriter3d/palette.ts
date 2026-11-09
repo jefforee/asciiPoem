@@ -1,7 +1,7 @@
 export const PALETTE = {
-  bodyTop: "#E6D5A8",
-  bodyMid: "#D0BB89",
-  bodyBot: "#A2926B",
+  bodyTop: "#E8D5B5",
+  bodyMid: "#D9C29D",
+  bodyBot: "#B7A17F",
   frameDark: "#2a2822",
   frameBlack: "#0f0e0b",
   platenDark: "#2a2620",
@@ -9,6 +9,7 @@ export const PALETTE = {
   knob: "#26231c",
   knobHi: "#8a8070",
   keyCap: "#f2e8cd",
+  keyAccent: "#c83f32",
   keyRim: "#1f1d19",
   keyInk: "#2a241d",
   chrome: "#c4bda8",
@@ -17,5 +18,5 @@ export const PALETTE = {
   ink: "#2e241a",
   plate: "#c4b692",
   plateInk: "#3a2e22",
-  brand: "SHEFF",
+  brand: "Olivetti",
 } as const;

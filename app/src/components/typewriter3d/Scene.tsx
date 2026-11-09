@@ -15,7 +15,7 @@ export default function Scene({ text, animateFrom, header, ripping }: Props) {
     <div className={styles.scene}>
       <Canvas shadows dpr={[1, 2]} gl={{ antialias: true }}>
         <color attach="background" args={["#eee2cc"]} />
-        <PerspectiveCamera makeDefault position={[0, 20, 48]} fov={34} />
+        <PerspectiveCamera makeDefault position={[24, 33, 40]} fov={34} />
         <ambientLight intensity={0.5} />
         <directionalLight
           position={[18, 32, 18]}
@@ -48,7 +48,7 @@ export default function Scene({ text, animateFrom, header, ripping }: Props) {
           maxDistance={80}
           minPolarAngle={0.2}
           maxPolarAngle={Math.PI / 2 - 0.05}
-          target={[0, 9, 0]}
+          target={[0, 7, 0]}
         />
       </Canvas>
     </div>

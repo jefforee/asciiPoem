@@ -6,13 +6,13 @@ export type KeyboardHandle = {
   press(label: string): void;
 };
 
-type RowSpec = { keys: string; hasReturn?: boolean };
+type RowSpec = { keys: string; hasReturn?: boolean; hasShift?: boolean };
 
 const ROWS: RowSpec[] = [
   { keys: "1234567890-'" },
   { keys: "QWERTYUIOP" },
   { keys: "ASDFGHJKL:", hasReturn: true },
-  { keys: "ZXCVBNM,.?" },
+  { keys: "ZXCVBNM,.?", hasShift: true },
 ];
 
 const GAP = 0.2;
@@ -21,6 +21,7 @@ function layoutRow(spec: RowSpec): Array<{ key: string; x: number; wide: number 
   const items: Array<{ key: string; wide: number }> = spec.keys
     .split("")
     .map((k) => ({ key: k, wide: 1 }));
+  if (spec.hasShift) items.unshift({ key: "SHIFT", wide: 1.35 });
   if (spec.hasReturn) items.push({ key: "RETURN", wide: 1.9 });
 
   let cursor = 0;
@@ -54,22 +55,38 @@ const Keyboard = forwardRef<KeyboardHandle>(function Keyboard(_, ref) {
         // ri=0 is the back row, ri=3 is the front char row.
         // Front char row sits at frontZ - rowGap (one row in front of spacebar).
         const z = KEYBOARD.frontZ - (ROWS.length - ri) * KEYBOARD.rowGap;
-        const y = KEYBOARD.baseY + (ROWS.length - ri) * KEYBOARD.tier;
+        const y = KEYBOARD.baseY + (ROWS.length - 1 - ri) * KEYBOARD.tier;
         const stagger = ri * 0.35;
         return layoutRow(row).map((p) => (
-          <group key={`${ri}-${p.key}`} position={[p.x + stagger, y, z]}>
+          <group
+            key={`${ri}-${p.key}`}
+            position={[p.x + stagger, y, z]}
+          >
             <Key
               ref={(el) => {
                 keys.current[p.key] = el;
               }}
-              label={p.key === "RETURN" ? "⏎" : p.key}
+              label={
+                p.key === "RETURN"
+                  ? "⏎"
+                  : p.key === "SHIFT"
+                    ? "⇧"
+                    : p.key
+              }
               widthMult={p.wide}
+              accent={p.key === "RETURN"}
             />
           </group>
         ));
       })}
       {/* spacebar — front-most row, extra wide */}
-      <group position={[0, KEYBOARD.baseY, KEYBOARD.frontZ]}>
+      <group
+        position={[
+          0,
+          KEYBOARD.baseY - KEYBOARD.tier,
+          KEYBOARD.frontZ,
+        ]}
+      >
         <Key
           ref={(el) => {
             keys.current["SPACE"] = el;

@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
+import { RoundedBox, Text } from "@react-three/drei";
 import type { Group } from "three";
 import { KEYBOARD } from "../constants";
 import { PALETTE } from "../palette";
@@ -12,10 +12,11 @@ export type KeyHandle = {
 type Props = {
   label?: string;
   widthMult?: number;
+  accent?: boolean;
 };
 
 const Key = forwardRef<KeyHandle, Props>(function Key(
-  { label, widthMult = 1 },
+  { label, widthMult = 1, accent = false },
   ref,
 ) {
   const capRef = useRef<Group>(null);
@@ -62,14 +63,18 @@ const Key = forwardRef<KeyHandle, Props>(function Key(
       </mesh>
       {/* keycap group — animated */}
       <group ref={capRef}>
-        <mesh castShadow>
-          <boxGeometry args={[w, KEYBOARD.keyHeight, d]} />
+        <RoundedBox
+          args={[w, KEYBOARD.keyHeight, d]}
+          radius={0.12}
+          smoothness={4}
+          castShadow
+        >
           <meshStandardMaterial
-            color={PALETTE.keyCap}
+            color={accent ? PALETTE.keyAccent : PALETTE.keyCap}
             roughness={0.42}
             metalness={0.08}
           />
-        </mesh>
+        </RoundedBox>
         {label && (
           <Text
             position={[0, KEYBOARD.keyHeight / 2 + 0.005, 0]}
