@@ -35,7 +35,7 @@ const Typebasket = forwardRef<TypebasketHandle>(function Typebasket(_, ref) {
           args={[TYPEBAR.arcRadius - 0.6, TYPEBAR.arcRadius + 0.6, 64, 1]}
         />
         <meshStandardMaterial
-          color={PALETTE.frameDark}
+          color={PALETTE.frameBlack}
           roughness={0.5}
           metalness={0.5}
         />

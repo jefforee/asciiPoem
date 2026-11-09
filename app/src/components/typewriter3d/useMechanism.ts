@@ -73,6 +73,7 @@ function processChar(
   if (!ch) return;
 
   if (!silent) {
+    if (ch >= "A" && ch <= "Z") refs.keyboard.current?.press("SHIFT");
     const keyLabel = charToKey(ch);
     if (keyLabel) refs.keyboard.current?.press(keyLabel);
   }

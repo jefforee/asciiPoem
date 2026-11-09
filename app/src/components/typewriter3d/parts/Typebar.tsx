@@ -62,9 +62,9 @@ const Typebar = forwardRef<TypebarHandle, Props>(function Typebar(
             args={[TYPEBAR.width, TYPEBAR.thickness, TYPEBAR.length]}
           />
           <meshStandardMaterial
-            color={PALETTE.frameDark}
-            roughness={0.4}
-            metalness={0.7}
+            color={PALETTE.chrome}
+            roughness={0.42}
+            metalness={0.72}
           />
         </mesh>
         {/* hammer slug at the far end */}
@@ -76,9 +76,9 @@ const Typebar = forwardRef<TypebarHandle, Props>(function Typebar(
             args={[TYPEBAR.hammerW, TYPEBAR.hammerH, TYPEBAR.hammerD]}
           />
           <meshStandardMaterial
-            color={PALETTE.frameBlack}
-            roughness={0.5}
-            metalness={0.55}
+            color={PALETTE.chrome}
+            roughness={0.35}
+            metalness={0.72}
           />
         </mesh>
       </group>
