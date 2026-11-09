@@ -16,7 +16,7 @@ export default function App() {
   const poem = poems[p];
   const base = Math.round(300 / speed);
 
-  const poemText = `${poem.title}\n\n${poem.text}`;
+  const poemText = `${poem.title}\n${poem.text}`;
 
   const onDone = useCallback(() => {
     setPhase("ripping");

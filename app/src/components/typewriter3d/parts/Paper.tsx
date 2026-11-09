@@ -10,11 +10,6 @@ export type PaperHandle = {
   mesh(): Mesh | null;
 };
 
-// Glyph advance (canvas px) must equal CARRIAGE.columnWidth * pixelsPerUnit
-// so the typing visually tracks the carriage travel.
-const GLYPH_PX = 22;
-const GLYPH_W_RATIO = 0.613;
-
 function paintBackground(
   ctx: CanvasRenderingContext2D,
   w: number,
@@ -59,7 +54,7 @@ function drawGlyph(
   ctx.rotate((Math.random() - 0.5) * 0.03);
   ctx.globalAlpha = alpha;
   ctx.fillStyle = PALETTE.ink;
-  ctx.font = `700 ${GLYPH_PX}px "Courier Prime", "Courier New", monospace`;
+  ctx.font = `700 ${PAPER.glyphFontSize}px "Courier Prime", "Courier New", monospace`;
   ctx.textBaseline = "alphabetic";
   ctx.textAlign = "left";
   ctx.fillText(ch, 0, 0);
@@ -86,7 +81,7 @@ const Paper = forwardRef<PaperHandle>(function Paper(_props, ref) {
     return { texture, ctx, size: { w, h } };
   }, []);
 
-  const advancePx = GLYPH_W_RATIO * GLYPH_PX;
+  const advancePx = PAPER.glyphWidthRatio * PAPER.glyphFontSize;
   const leftPx = PAPER.leftMargin * PAPER.pixelsPerUnit;
   const linePx = PAPER.lineHeight * PAPER.pixelsPerUnit;
   const topPx = PAPER.topMargin * PAPER.pixelsPerUnit;

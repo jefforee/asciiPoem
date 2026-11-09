@@ -30,10 +30,6 @@ const PAPER_REST_Z = PLATEN.radius + 0.08;
 const PAPER_REST_PITCH = -0.14;
 const RIP_MS = 1200;
 
-// Each line feed advances the paper by one full line-height so a newly
-// typed row visually lands at the strike line each time.
-const PAPER_FEED_PER_LINE = PAPER.lineHeight;
-
 type Mode = "shift" | "return";
 
 type State = {
@@ -79,10 +75,13 @@ function processChar(
   }
 
   if (ch === "\n") {
+    const feed = s.col === 0
+      ? PAPER.stanzaGap
+      : PAPER.lineHeight + (s.row === 0 ? PAPER.titleGap : 0);
     s.targetCarriageX = CARRIAGE.homeX;
-    s.targetPaperY += PAPER_FEED_PER_LINE;
+    s.targetPaperY += feed;
     s.col = 0;
-    s.row += 1;
+    s.row += feed / PAPER.lineHeight;
     s.mode = "return";
     if (!silent) refs.crLever.current?.swing();
     return;

@@ -10,7 +10,7 @@ export const BASE = {
 export const PLATEN = {
   radius: 1.5,
   length: 16,
-  y: 8.6,
+  y: 6.7,
   z: -5.5,
 };
 
@@ -25,7 +25,11 @@ export const PAPER = {
   height: 12,
   pixelsPerUnit: 54,
   columns: 48,
-  lineHeight: 1.3,
+  lineHeight: 0.85,
+  stanzaGap: 0.4,
+  titleGap: 0.2,
+  glyphFontSize: 22,
+  glyphWidthRatio: 0.613,
   topMargin: 1.6,
   leftMargin: 1.0,
 };
@@ -59,11 +63,9 @@ export const STRIKE = {
   z: PLATEN.z + PLATEN.radius + 0.1,
 };
 
-// Typebar geometry — pivots sit just above the body deck so bars are
-// visibly outside the chassis. arcRadius is derived so the hammer at
-// strikePitch lands exactly on STRIKE.
-const _TB_PIVOT_Y = 7.6;
-const _TB_LENGTH = 4;
+// Typebar pivots sit just above the exposed opening in the rear deck.
+const _TB_PIVOT_Y = 5.8;
+const _TB_LENGTH = 3.5;
 const _TB_STRIKE_PITCH = Math.asin((STRIKE.y - _TB_PIVOT_Y) / _TB_LENGTH);
 
 export const TYPEBAR = {
@@ -72,14 +74,14 @@ export const TYPEBAR = {
   length: _TB_LENGTH,
   arcRadius: _TB_LENGTH * Math.cos(_TB_STRIKE_PITCH),
   arcSpan: Math.PI / 1.35,
-  width: 0.12,
-  thickness: 0.1,
-  restPitch: -0.12,
+  width: 0.18,
+  thickness: 0.16,
+  restPitch: 0.5,
   strikePitch: _TB_STRIKE_PITCH,
   strikeMs: 95,
-  hammerW: 0.2,
-  hammerH: 0.24,
-  hammerD: 0.14,
+  hammerW: 0.24,
+  hammerH: 0.3,
+  hammerD: 0.2,
 };
 
 export const KEYBOARD = {

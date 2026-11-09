@@ -1,3 +1,4 @@
+import { RoundedBox } from "@react-three/drei";
 import { RIBBON } from "../constants";
 import { PALETTE } from "../palette";
 
@@ -7,8 +8,32 @@ type Props = {
 
 export default function RibbonSpool({ side }: Props) {
   const x = (side === "left" ? -1 : 1) * RIBBON.spoolX;
+  const spoolBottom = RIBBON.spoolY - RIBBON.spoolHeight / 2 - 0.12;
+  const mountHeight = spoolBottom - 5.48;
   return (
     <group position={[x, RIBBON.spoolY, RIBBON.spoolZ]}>
+      <RoundedBox
+        args={[1.15, 0.14, 1.1]}
+        position={[0, 5.48 - RIBBON.spoolY, 0]}
+        radius={0.12}
+        smoothness={6}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial
+          color={PALETTE.bodyMid}
+          roughness={0.48}
+          metalness={0.08}
+        />
+      </RoundedBox>
+      <mesh position={[0, (5.55 + spoolBottom) / 2 - RIBBON.spoolY, 0]} castShadow>
+        <cylinderGeometry args={[0.24, 0.3, mountHeight - 0.07, 20]} />
+        <meshStandardMaterial
+          color={PALETTE.chrome}
+          roughness={0.3}
+          metalness={0.82}
+        />
+      </mesh>
       {/* axle */}
       <mesh castShadow>
         <cylinderGeometry args={[0.18, 0.18, RIBBON.spoolHeight + 0.6, 16]} />

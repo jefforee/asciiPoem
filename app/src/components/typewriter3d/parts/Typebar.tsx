@@ -3,6 +3,7 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
+import { RoundedBox } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import type { Group } from "three";
 import { TYPEBAR } from "../constants";
@@ -57,30 +58,33 @@ const Typebar = forwardRef<TypebarHandle, Props>(function Typebar(
     <group rotation={[0, yaw, 0]}>
       <group ref={pivotRef} rotation={[TYPEBAR.restPitch, 0, 0]}>
         {/* bar — shifted so one end sits at the pivot and the other extends in -Z */}
-        <mesh position={[0, 0, -TYPEBAR.length / 2]} castShadow>
-          <boxGeometry
-            args={[TYPEBAR.width, TYPEBAR.thickness, TYPEBAR.length]}
-          />
-          <meshStandardMaterial
-            color={PALETTE.chrome}
-            roughness={0.42}
-            metalness={0.72}
-          />
-        </mesh>
-        {/* hammer slug at the far end */}
-        <mesh
-          position={[0, 0.05, -TYPEBAR.length + 0.05]}
+        <RoundedBox
+          args={[TYPEBAR.width, TYPEBAR.thickness, TYPEBAR.length]}
+          position={[0, 0, -TYPEBAR.length / 2]}
+          radius={0.055}
+          smoothness={4}
           castShadow
         >
-          <boxGeometry
-            args={[TYPEBAR.hammerW, TYPEBAR.hammerH, TYPEBAR.hammerD]}
-          />
           <meshStandardMaterial
             color={PALETTE.chrome}
-            roughness={0.35}
-            metalness={0.72}
+            roughness={0.28}
+            metalness={0.86}
           />
-        </mesh>
+        </RoundedBox>
+        {/* hammer slug at the far end */}
+        <RoundedBox
+          args={[TYPEBAR.hammerW, TYPEBAR.hammerH, TYPEBAR.hammerD]}
+          position={[0, 0.05, -TYPEBAR.length + 0.05]}
+          radius={0.04}
+          smoothness={4}
+          castShadow
+        >
+          <meshStandardMaterial
+            color={PALETTE.frameDark}
+            roughness={0.32}
+            metalness={0.7}
+          />
+        </RoundedBox>
       </group>
     </group>
   );

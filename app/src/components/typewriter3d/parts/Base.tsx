@@ -39,7 +39,7 @@ function roundedRect(
 }
 
 export default function Base() {
-  const { shape, keyboardFrame } = useMemo(() => {
+  const { shape, keyboardFrame, typebarOpening } = useMemo(() => {
     const xAtZ = (z: number) => -z;
     const s = new Shape();
     s.moveTo(xAtZ(-BASE.depth / 2), 0);
@@ -62,7 +62,13 @@ export default function Base() {
     roundedRect(opening, 21.6, 8.35, 0.85, true);
     frame.holes.push(opening);
 
-    return { shape: s, keyboardFrame: frame };
+    const typebarOpening = new Shape();
+    roundedRect(typebarOpening, 10.2, 2.65, 0.62);
+    const typebarSlot = new Path();
+    roundedRect(typebarSlot, 8.5, 1.65, 0.38, true);
+    typebarOpening.holes.push(typebarSlot);
+
+    return { shape: s, keyboardFrame: frame, typebarOpening };
   }, []);
 
   const deckW = BASE.topWidth - DECK.margin * 2;
@@ -159,8 +165,46 @@ export default function Base() {
         </mesh>
       </group>
 
+      <mesh position={[0, 5.43, -2.15]} rotation={[0.09, 0, 0]} receiveShadow>
+        <RoundedBox
+          args={[8.5, 0.05, 1.65]}
+          radius={0.3}
+          smoothness={6}
+        >
+          <meshStandardMaterial
+            color={PALETTE.frameBlack}
+            roughness={0.58}
+            metalness={0.35}
+          />
+        </RoundedBox>
+      </mesh>
+      <mesh
+        position={[0, 5.63, -2.15]}
+        rotation={[0.09, 0, 0]}
+        castShadow
+        receiveShadow
+      >
+        <extrudeGeometry
+          args={[
+            typebarOpening,
+            {
+              depth: 0.16,
+              bevelEnabled: true,
+              bevelSegments: 5,
+              bevelSize: 0.04,
+              bevelThickness: 0.03,
+            },
+          ]}
+        />
+        <meshStandardMaterial
+          color={PALETTE.bodyMid}
+          roughness={0.5}
+          metalness={0.04}
+        />
+      </mesh>
+
       <RoundedBox
-        args={[BASE.width - 6, 0.08, 2.8]}
+        args={[BASE.width + 0.5, 0.08, 3.9]}
         position={[0, 4.86, -5.5]}
         radius={0.08}
         smoothness={6}
