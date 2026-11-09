@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import { toPng } from "html-to-image";
 import type { Poem } from "../data/poems";
+import { PAPER } from "./typewriter3d/constants";
 import styles from "./Reader.module.css";
 
 type Props = {
@@ -11,6 +12,14 @@ export default function Reader({ poem }: Props) {
   const paperRef = useRef<HTMLDivElement>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const paperLines = [poem.title, ...poem.text.split("\n")];
+  const fontScale = PAPER.glyphFontSize / (PAPER.width * PAPER.pixelsPerUnit);
+  const paperStyle = {
+    "--paper-font-size": `min(${fontScale * 36}rem, ${fontScale * 92}vw)`,
+    "--paper-line-height": `${(PAPER.lineHeight * PAPER.pixelsPerUnit) / PAPER.glyphFontSize}em`,
+    "--stanza-line-height": `${(PAPER.stanzaGap * PAPER.pixelsPerUnit) / PAPER.glyphFontSize}em`,
+    "--title-gap-height": `${(PAPER.titleGap * PAPER.pixelsPerUnit) / PAPER.glyphFontSize}em`,
+  } as CSSProperties;
 
   const saveAsPng = async () => {
     if (!paperRef.current) return;
@@ -43,9 +52,23 @@ export default function Reader({ poem }: Props) {
   return (
     <div className={styles.reader}>
       <div className={styles.bigshadow}>
-        <div ref={paperRef} className={styles.bigsheet}>
-          <h2>{poem.title}</h2>
-          <pre className={styles.rlines}>{poem.text}</pre>
+        <div ref={paperRef} className={styles.bigsheet} style={paperStyle}>
+          <div className={styles.paperText}>
+            {paperLines.map((line, index) => (
+              <div
+                key={index}
+                className={
+                  index === 0
+                    ? styles.paperTitle
+                    : line
+                      ? styles.paperLine
+                      : styles.stanzaSpace
+                }
+              >
+                {line || "\u00a0"}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <div className={styles.saveControls}>
