@@ -32,6 +32,7 @@ export default function App() {
 
   return (
     <div className="app">
+      <h1 className="page-title">Sheff Poems</h1>
       <div className="bar">
         {poems.map((x, n) => (
           <button

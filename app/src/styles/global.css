@@ -48,11 +48,22 @@ body {
 }
 
 .app {
+  position: relative;
   height: 100%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.page-title {
+  position: absolute;
+  top: 0.7rem;
+  left: 1rem;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  z-index: 1;
 }
 
 .bar {
