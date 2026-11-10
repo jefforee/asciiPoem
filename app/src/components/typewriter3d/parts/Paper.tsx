@@ -7,6 +7,7 @@ export type PaperHandle = {
   draw(ch: string, col: number, row: number): void;
   drawHeader(text: string): number;
   reset(): void;
+  setFeed(feed: number): void;
   mesh(): Mesh | null;
 };
 
@@ -15,28 +16,52 @@ function paintBackground(
   w: number,
   h: number,
 ): void {
-  ctx.fillStyle = PALETTE.paper;
+  const tone = ctx.createLinearGradient(0, 0, 0, h);
+  tone.addColorStop(0, "#f4eddd");
+  tone.addColorStop(0.48, PALETTE.paper);
+  tone.addColorStop(1, "#f5eddc");
+  ctx.fillStyle = tone;
   ctx.fillRect(0, 0, w, h);
 
-  // subtle grain speckles
-  ctx.fillStyle = "rgba(90, 65, 35, 0.045)";
-  for (let i = 0; i < 2600; i++) {
-    const x = Math.random() * w;
-    const y = Math.random() * h;
-    ctx.fillRect(x, y, 1, 1);
+  let seed = 0x5eed1234;
+  const random = () => {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 0x100000000;
+  };
+
+  // Fine, irregular fibers and flecks give the sheet a stable paper grain.
+  for (let i = 0; i < 900; i++) {
+    const x = random() * w;
+    const y = random() * h;
+    const length = 2 + random() * 14;
+    const drift = (random() - 0.5) * 3;
+    ctx.strokeStyle =
+      random() < 0.65
+        ? "rgba(112, 82, 45, 0.045)"
+        : "rgba(255, 255, 245, 0.2)";
+    ctx.lineWidth = 0.5 + random() * 0.5;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + length, y + drift);
+    ctx.stroke();
   }
 
-  // faint horizontal fibre banding
-  ctx.strokeStyle = "rgba(90, 65, 35, 0.035)";
-  ctx.lineWidth = 1;
-  for (let y = 0; y < h; y += 2) {
-    if (Math.random() < 0.08) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(w, y);
-      ctx.stroke();
-    }
+  for (let i = 0; i < 3200; i++) {
+    const light = random() < 0.55;
+    ctx.fillStyle = light
+      ? "rgba(255, 255, 245, 0.22)"
+      : "rgba(100, 72, 39, 0.055)";
+    const size = 0.5 + random() * 0.8;
+    ctx.fillRect(random() * w, random() * h, size, size);
   }
+
+  const edge = ctx.createLinearGradient(0, 0, w, 0);
+  edge.addColorStop(0, "rgba(110, 78, 40, 0.055)");
+  edge.addColorStop(0.04, "rgba(110, 78, 40, 0)");
+  edge.addColorStop(0.96, "rgba(110, 78, 40, 0)");
+  edge.addColorStop(1, "rgba(110, 78, 40, 0.055)");
+  ctx.fillStyle = edge;
+  ctx.fillRect(0, 0, w, h);
 }
 
 function drawGlyph(
@@ -66,6 +91,8 @@ function drawGlyph(
 
 const Paper = forwardRef<PaperHandle>(function Paper(_props, ref) {
   const meshRef = useRef<Mesh>(null);
+  const flatZ = useRef<Float32Array | null>(null);
+  const lastFeed = useRef(-1);
 
   const { texture, ctx, size } = useMemo(() => {
     const w = Math.round(PAPER.width * PAPER.pixelsPerUnit);
@@ -119,6 +146,30 @@ const Paper = forwardRef<PaperHandle>(function Paper(_props, ref) {
         paintBackground(ctx, size.w, size.h);
         texture.needsUpdate = true;
       },
+      setFeed(feed) {
+        const mesh = meshRef.current;
+        if (!mesh || Math.abs(feed - lastFeed.current) < 0.005) return;
+
+        const positions = mesh.geometry.getAttribute("position");
+        if (!flatZ.current || flatZ.current.length !== positions.count) {
+          flatZ.current = Float32Array.from(
+            { length: positions.count },
+            (_, i) => positions.getZ(i),
+          );
+        }
+
+        const fall = Math.min(
+          2.4,
+          Math.pow(Math.max(0, feed), 1.45) * 0.28,
+        );
+        for (let i = 0; i < positions.count; i++) {
+          const height = Math.max(0, Math.min(1, (positions.getY(i) + 1) / 7));
+          positions.setZ(i, flatZ.current[i] + fall * height * height);
+        }
+        positions.needsUpdate = true;
+        mesh.geometry.computeVertexNormals();
+        lastFeed.current = feed;
+      },
       mesh() {
         return meshRef.current;
       },
@@ -136,7 +187,7 @@ const Paper = forwardRef<PaperHandle>(function Paper(_props, ref) {
       rotation={[-0.14, 0, 0]}
       castShadow
     >
-      <planeGeometry args={[PAPER.width, PAPER.height]} />
+      <planeGeometry args={[PAPER.width, PAPER.height, 1, 48]} />
       <meshStandardMaterial
         map={texture}
         roughness={0.92}

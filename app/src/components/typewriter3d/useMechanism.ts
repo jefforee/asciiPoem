@@ -175,6 +175,7 @@ export function useMechanism(
     if (paperMesh) {
       const k = 1 - Math.exp(-dt / 0.35);
       s.paperY += (s.targetPaperY - s.paperY) * k;
+      refs.paper.current?.setFeed(s.paperY);
 
       if (s.ripActive) {
         const t = Math.min(
